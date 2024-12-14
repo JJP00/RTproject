@@ -1,6 +1,7 @@
 #ifndef COLOR_H
 #define COLOR_H
 
+#include "constants.hpp"
 #include "vec3.hpp"
 
 using color = vec3;

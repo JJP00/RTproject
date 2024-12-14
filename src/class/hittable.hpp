@@ -2,7 +2,7 @@
 #define HITTABLE_H
 
 #include "ray.hpp"
-
+#include "constants.hpp"
 class hit_record
 {
 public:

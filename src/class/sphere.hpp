@@ -3,6 +3,7 @@
 
 #include "hittable.hpp"
 #include "vec3.hpp"
+#include "constants.hpp"
 
 class sphere : public hittable
 {
