@@ -18,7 +18,7 @@ Note that it is programmed without any other library... so it doesn't use the GP
 
 |![alt text](resultados/2CirculosNormales.png)|
 |:--:|
-|14/12/24 - Normales de dos esferas uno sobre el otro (poco a poco):cry:|
+|14/12/24 - Normales de dos esferas uno sobre el otro (poco a poco) :cry:|
 |14/12/24 - 2 sphere normals, one on top of eachother (little by little) :cry:|
 
 # Referencias / references
