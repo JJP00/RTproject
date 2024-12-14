@@ -14,6 +14,14 @@ It is following the “Ray Tracing in one weekend” book series, so credit goes
 
 Note that it is programmed without any other library... so it doesn't use the GPU... another project will be done for that...
 
+# Imagenes / Images
+
+|![alt text](resultados/2CirculosNormales.png)|
+|:--:|
+|14/12/24 - Normales de dos esferas uno sobre el otro (poco a poco):cry:|
+|14/12/24 - 2 sphere normals, one on top of eachother (little by little) :cry:|
+
 # Referencias / references
 
-- “Ray Tracing in one weekend” - Peter Shirley, Trevor D Black, Steve Hollasch <https://raytracing.github.io/>
+- “Ray Tracing in one weekend” - Peter Shirley, Trevor D Black, Steve Hollasch - <https://raytracing.github.io/>
+- Articulo de wikipedia sobre esferas - <https://es.wikipedia.org/wiki/Esfera>
