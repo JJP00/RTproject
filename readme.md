@@ -16,10 +16,10 @@ Note that it is programmed without any other library... so it doesn't use the GP
 
 # Imagenes / Images
 
-|<img src="resultados\2CirculosNormales.png" width=200 height=112>|<img src="resultados\2CirculosNormalesAA.png" width=200 height=112>|<img src="resultados\2EsferasDifusoV1.png" width=200 height=112>|
-|:--:|:--:|:--:|
-|14/12/24 - Normales de dos esferas uno sobre el otro (poco a poco)|15/12/24 - Imagen anterior con Antialiasing|15/12/24 - Imagen con esferas mates, versión 1|
-|14/12/24 - 2 sphere normals, one on top of eachother (little by little) :cry:|15/12/24 - Previous image with Antialiasing :sparkles:|15/12/24 - Image with diffused spheres, version 1|
+|<img src="resultados\2CirculosNormales.png" width=200 height=112>|<img src="resultados\2CirculosNormalesAA.png" width=200 height=112>|<img src="resultados\2EsferasDifusoV1.png" width=200 height=112>|<img src="resultados\2EsferasDifusoV2.png" width=200 height=112>|
+|:--:|:--:|:--:|:--:|
+|14/12/24 - Normales de dos esferas uno sobre el otro (poco a poco)|15/12/24 - Imagen anterior con Antialiasing|15/12/24 - Imagen con esferas mates, versión 1| 15/12/24 - bug precisión de hit(), Superficie de Lambert, corrección del gamma |
+|14/12/24 - 2 sphere normals, one on top of eachother (little by little) :cry:|15/12/24 - Previous image with Antialiasing :sparkles:|15/12/24 - Image with diffused spheres, version 1|15/12/24 - shadow acne fix, Lambertian, gamma correction|
 
 # Referencias / references
 
