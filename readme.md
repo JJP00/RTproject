@@ -16,10 +16,10 @@ Note that it is programmed without any other library... so it doesn't use the GP
 
 # Imagenes / Images
 
-|![alt text](resultados/2CirculosNormales.png)|![alt text](resultados/2CirculosNormalesAA.png)|
-|:--:|:--:|
-|14/12/24 - Normales de dos esferas uno sobre el otro (poco a poco) :cry:|15/12/24 - Imagen anterior con Antialiasing :sparkles:|
-|14/12/24 - 2 sphere normals, one on top of eachother (little by little) :cry:|15/12/24 - Previous image with Antialiasing :sparkles:|
+|![alt text](resultados/2CirculosNormales.png)|![alt text](resultados/2CirculosNormalesAA.png)|![alt text](resultados/2EsferasDifusoV1.png)|
+|:--:|:--:|:--:|
+|14/12/24 - Normales de dos esferas uno sobre el otro (poco a poco)|15/12/24 - Imagen anterior con Antialiasing|15/12/24 - Imagen con esferas mates, versión 1|
+|14/12/24 - 2 sphere normals, one on top of eachother (little by little) :cry:|15/12/24 - Previous image with Antialiasing :sparkles:|15/12/24 - Image with diffused spheres, version 1|
 
 # Referencias / references
 
