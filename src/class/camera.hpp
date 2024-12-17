@@ -4,6 +4,7 @@
 #include "hittable.hpp"
 #include "material.hpp"
 #include <atomic>
+#include <omp.h>
 class camera
 {
 public:
@@ -34,13 +35,13 @@ public:
         std::vector<color> image(image_width * image_height);
         std::atomic<int> remaining_scanlines(image_height); // Atomic counter for scanlines
 
-#pragma omp parallel for schedule(dynamic, 1) firstprivate(seed)
+#pragma omp parallel for schedule(guided)
         for (int j = 0; j < image_height; j++)
         {
+            unsigned int thread_seed = seed + omp_get_thread_num(); // Thread-local seed
             for (int i = 0; i < image_width; i++)
             {
                 color pixel_color(0, 0, 0);
-
                 for (int sample = 0; sample < samples_per_pixel; sample++)
                 {
                     ray r = get_ray(i, j, seed);
@@ -50,7 +51,9 @@ public:
                 image[index] = pixel_color;
                 // write_color(std::cout, pixel_samples_scale * pixel_color);
             }
+
             remaining_scanlines--;
+
 #pragma omp critical
             {
                 std::clog << "\rScanlines remaning: " << remaining_scanlines << ' ' << std::flush;

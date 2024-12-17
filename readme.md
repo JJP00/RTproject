@@ -6,6 +6,15 @@ Se está siguiendo la serie de libros "Ray Tracing in one weekend", por lo tanto
 
 Hay que tener en cuenta que se programa sin ninguna otra librería... así que no usa la GPU... ya se hará otro proyecto para eso...
 
+## Como compilar y ejecutar
+
+Ya que es un programa paralelizado con OpenMP:
+
+```console
+g++ -fopenmp -o mainOpm.exe .\src\main.cpp
+.\mainOpm.exe | Set-Content image.ppm -Encoding String
+```
+
 # RT Project
 
 2024 project to learn basic concepts about “Ray Tracing” rendering technology (or “Path tracing” later on).
@@ -13,6 +22,15 @@ Hay que tener en cuenta que se programa sin ninguna otra librería... así que n
 It is following the “Ray Tracing in one weekend” book series, so credit goes to Peter Shirley, Trevor D Black, Steve Hollasch!
 
 Note that it is programmed without any other library... so it doesn't use the GPU... another project will be done for that...
+
+## How to compile and run
+
+Since it's a openMP parallelized program:
+
+```console
+g++ -fopenmp -o mainOpm.exe .\src\main.cpp
+.\mainOpm.exe | Set-Content image.ppm -Encoding String
+```
 
 # Imagenes / Images
 
