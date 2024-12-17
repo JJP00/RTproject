@@ -51,7 +51,12 @@ Tal vez, las imagenes se vean achatadas... no controlo markdown.
 | 17/12/24 - Imagen final, donde 1200x675, 500spp y 50 profundidad. |
 | 17/12/24 - Final image, where 1200x675, 500spp y 50 depth. |
 
+|<img src="resultados\MotionBlur.png" width=200 height=112>|
+|:---:|
+| 17/12/24 - Imagen final con desenfoque de movimiento, donde 400x225, 100spp y 50 profundidad. |
+| 17/12/24 - Final image with motion blur, where 400x225, 100spp y 50 depth. |
+
 # Referencias / references
 
-- “Ray Tracing in one weekend” - Peter Shirley, Trevor D Black, Steve Hollasch - <https://raytracing.github.io/>
-- Articulo de wikipedia sobre esferas - <https://es.wikipedia.org/wiki/Esfera>
+- [_Ray Tracing in One Weekend_](https://raytracing.github.io/books/RayTracingInOneWeekend.html)
+- [_Ray Tracing: The Next Week_](https://raytracing.github.io/books/RayTracingTheNextWeek.html)
