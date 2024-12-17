@@ -51,14 +51,14 @@ public:
         return e[0] * e[0] + e[1] * e[1] + e[2] * e[2];
     }
 
-    static vec3 random()
+    static vec3 random(unsigned int &seed)
     {
-        return vec3(random_double(), random_double(), random_double());
+        return vec3(random_double(seed), random_double(seed), random_double(seed));
     }
 
-    static vec3 random(double min, double max)
+    static vec3 random(double min, double max, unsigned seed)
     {
-        return vec3(random_double(min, max), random_double(min, max), random_double(min, max));
+        return vec3(random_double(min, max, seed), random_double(min, max, seed), random_double(min, max, seed));
     }
 
     bool near_rezo() const
@@ -125,30 +125,30 @@ inline vec3 unit_vector(const vec3 &v)
     return v / v.length();
 }
 
-inline vec3 random_in_unit_disk()
+inline vec3 random_in_unit_disk(unsigned int &seed)
 {
     while (true)
     {
-        auto p = vec3(random_double(-1, 1), random_double(-1, 1), 0);
+        auto p = vec3(random_double(-1, 1, seed), random_double(-1, 1, seed), 0);
         if (p.lenth_squared() < 1)
             return p;
     }
 }
 
-inline vec3 random_unit_vector()
+inline vec3 random_unit_vector(unsigned int &seed)
 {
     while (true)
     {
-        vec3 p = vec3::random(1, -1);
+        vec3 p = vec3::random(1, -1, seed);
         double lensq = p.lenth_squared();
         if (1e-160 < lensq && lensq <= 1)
             return p / sqrt(lensq);
     }
 }
 
-inline vec3 random_on_hemisphere(const vec3 &normal)
+inline vec3 random_on_hemisphere(const vec3 &normal, unsigned int &seed)
 {
-    vec3 on_unit_sphere = random_unit_vector();
+    vec3 on_unit_sphere = random_unit_vector(seed);
     if (dot(on_unit_sphere, normal) > 0.0)
         return on_unit_sphere;
     else

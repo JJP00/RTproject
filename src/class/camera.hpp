@@ -3,9 +3,11 @@
 
 #include "hittable.hpp"
 #include "material.hpp"
+#include <atomic>
 class camera
 {
 public:
+    unsigned int seed;
     // imagen
     double aspect_ratio = 1.0;
     int image_width = 100;
@@ -21,31 +23,52 @@ public:
     double focus_dist = 10;
 
     void
-    render(const hittable &world)
+    render(const hittable &world, unsigned int &seed)
     {
         initialize();
 
-        std::cout
-            << "P3\n"
-            << image_width << " " << image_height << "\n255\n";
+        // std::cout
+        //     << "P3\n"
+        //    << image_width << " " << image_height << "\n255\n";
 
+        std::vector<color> image(image_width * image_height);
+        std::atomic<int> remaining_scanlines(image_height); // Atomic counter for scanlines
+
+#pragma omp parallel for schedule(dynamic, 1) firstprivate(seed)
         for (int j = 0; j < image_height; j++)
         {
-            std::clog << "\rScanlines remaning: " << (image_height - j) << ' ' << std::flush;
             for (int i = 0; i < image_width; i++)
             {
                 color pixel_color(0, 0, 0);
 
                 for (int sample = 0; sample < samples_per_pixel; sample++)
                 {
-                    ray r = get_ray(i, j);
+                    ray r = get_ray(i, j, seed);
                     pixel_color += ray_color(r, max_depth, world);
                 }
-
-                write_color(std::cout, pixel_samples_scale * pixel_color);
+                int index = j * image_width + i;
+                image[index] = pixel_color;
+                // write_color(std::cout, pixel_samples_scale * pixel_color);
+            }
+            remaining_scanlines--;
+#pragma omp critical
+            {
+                std::clog << "\rScanlines remaning: " << remaining_scanlines << ' ' << std::flush;
             }
         }
+
         std::clog << "\rDone.                 \n";
+
+        std::cout << "P3\n"
+                  << image_width << ' ' << image_height << "\n255\n";
+        for (int j = 0; j < image_height; j++)
+        {
+            for (int i = 0; i < image_width; i++)
+            {
+                int index = j * image_width + i;
+                write_color(std::cout, image[index], samples_per_pixel);
+            }
+        }
     }
 
 private:
@@ -100,27 +123,27 @@ private:
         defocus_disk_v = v * defocus_radius;
     }
 
-    ray get_ray(int i, int j)
+    ray get_ray(int i, int j, unsigned int &seed)
     {
-        auto offset = sample_square();
+        auto offset = sample_square(seed);
         auto pixel_sample = pixel00_loc + ((i + offset.x()) * pixel_delta_u) + ((j + offset.y()) * pixel_delta_v);
 
-        auto ray_origin = (defocus_angle <= 0) ? camera_center : defocus_disk_sample();
+        auto ray_origin = (defocus_angle <= 0) ? camera_center : defocus_disk_sample(seed);
         auto ray_direction = pixel_sample - ray_origin;
 
         return ray(ray_origin, ray_direction);
     }
 
-    point3 defocus_disk_sample() const
+    point3 defocus_disk_sample(unsigned int &seed) const
     {
-        auto p = random_in_unit_disk();
+        auto p = random_in_unit_disk(seed);
         return camera_center + (p[0] * defocus_disk_u) + (p[1] * defocus_disk_v);
     }
 
-    vec3 sample_square() const
+    vec3 sample_square(unsigned int &seed) const
     {
         // Returns the vector to a random point in the [-.5,-.5]-[+.5,+.5] unit square.
-        return vec3(random_double() - 0.5, random_double() - 0.5, 0);
+        return vec3(random_double(seed) - 0.5, random_double(seed) - 0.5, 0);
     }
 
     color ray_color(const ray &r, int depth, const hittable &world) const
@@ -134,7 +157,7 @@ private:
         {
             ray scattered;
             color attenuation;
-            if (rec.mat->scatter(r, rec, attenuation, scattered))
+            if (rec.mat->scatter(r, rec, attenuation, scattered, seed))
                 return attenuation * ray_color(scattered, depth - 1, world);
             return vec3(0, 0, 0);
         }
