@@ -28,6 +28,11 @@ Tal vez, las imagenes se vean achatadas... no controlo markdown.
 | 15/12/24 - bug precisión de hit(), Superficie de Lambert, corrección del gamma. |  15/12/24 - imagen anterior con borrosidad. | 16/12/24 Material con refracción, con 2 niveles diferentes de indice de refracción. |
 | 15/12/24 - shadow acne fix, Lambertian, gamma correction. | 15/12/24 - Previous image with fuzziness. | 16/12/24 Material with refration, with 2 different refraction indexes. |
 
+|<img src="resultados\Final.png" width=800 height=448>|
+|:---:|
+| 17/12/24 - Imagen final, donde 1200x675, 500spp y 50 profundidad. |
+| 17/12/24 - Final image, where 1200x675, 500spp y 50 depth. |
+
 # Referencias / references
 
 - “Ray Tracing in one weekend” - Peter Shirley, Trevor D Black, Steve Hollasch - <https://raytracing.github.io/>
