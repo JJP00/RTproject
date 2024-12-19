@@ -5,12 +5,16 @@
             "label": "C/C++: g++.exe build active file",
             "command": "C:\\msys64\\mingw64\\bin\\g++.exe",
             "args": [
+                "-g",
+                "-std=c++17",   
                 "-fopenmp",
+                "-I",
+                "${workspaceFolder}\\include",
                 "-fdiagnostics-color=always",
                 "-g",
                 "${file}",
                 "-o",
-                "${workspaceFolder}\\${fileBasenameNoExtension}2.exe"
+                "${workspaceFolder}\\${fileBasenameNoExtension}.exe"
             ],
             "options": {
                 "cwd": "${fileDirname}"
