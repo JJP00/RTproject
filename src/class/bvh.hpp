@@ -10,9 +10,9 @@
 class bvh_node : public hittable
 {
 public:
-    bvh_node(hittable_list list, unsigned int &seed) : bvh_node(list.objects, 0, list.objects.size(), seed) {}
+    bvh_node(hittable_list list) : bvh_node(list.objects, 0, list.objects.size()) {}
 
-    bvh_node(std::vector<shared_ptr<hittable>> &objects, size_t start, size_t end, unsigned int &seed)
+    bvh_node(std::vector<shared_ptr<hittable>> &objects, size_t start, size_t end)
     {
         // int axis = random_int(0, 2, seed);
         bbox = aabb::empty;
@@ -42,8 +42,8 @@ public:
             std::sort(std::begin(objects) + start, std::begin(objects) + end, comparator);
 
             auto mid = start + object_span / 2;
-            left = make_shared<bvh_node>(objects, start, mid, seed);
-            right = make_shared<bvh_node>(objects, mid, end, seed);
+            left = make_shared<bvh_node>(objects, start, mid);
+            right = make_shared<bvh_node>(objects, mid, end);
         }
 
         // bbox = aabb(left->bounding_box(), right->bounding_box());
