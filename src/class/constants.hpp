@@ -45,9 +45,13 @@ inline double random_double(unsigned int &seed)
 
 inline double random_double(double min, double max, unsigned int &seed)
 {
-    static thread_local std::mt19937 generator(seed);
-    std::uniform_real_distribution<double> distribution(min, max);
-    return distribution(generator);
+    return min + (max - min) * random_double(seed);
+}
+
+inline int random_int(int min, int max, unsigned int &seed)
+{
+    // Returns a random integer in [min,max].
+    return int(random_double(min, max + 1, seed));
 }
 
 inline double clamp(double x, double min, double max)
