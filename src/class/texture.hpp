@@ -3,6 +3,7 @@
 
 #include "color.hpp"
 #include "rtw_stb_image.hpp"
+#include "perlin.hpp"
 
 class texture
 {
@@ -76,6 +77,23 @@ public:
 
 private:
     rtw_image image;
+};
+
+class noise_texture : public texture
+{
+public:
+    noise_texture(unsigned int &seed, double scale) : noise(perlin(seed)), scale(scale) {}
+
+    color value(double u, double v, const point3 &p) const override
+    {
+        // return color(1, 1, 1) * 0.5 * (1.0 + noise.noise(p * scale)); //Perlin texture, shifted off integer values
+        // return color(1, 1, 1) * noise.turb(p, 7); //Perlin texture with turbulence
+        return color(.5, .5, .5) * (1 + std::sin(scale * p.z() + 10 * noise.turb(p, 7))); // Perlin noise, marbled texture
+    }
+
+private:
+    perlin noise;
+    double scale;
 };
 
 #endif

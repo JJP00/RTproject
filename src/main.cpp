@@ -143,9 +143,37 @@ void earth()
     cam.render(hittable_list(globe), seed);
 }
 
+void perlin_spheres()
+{
+    unsigned int seed = 53;
+    srand(seed);
+
+    hittable_list world;
+
+    auto pertext = make_shared<noise_texture>(seed, 4);
+    world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
+    world.add(make_shared<sphere>(point3(0, 2, 0), 2, make_shared<lambertian>(pertext)));
+
+    camera cam;
+
+    cam.aspect_ratio = 16.0 / 9.0;
+    cam.image_width = 400;
+    cam.samples_per_pixel = 100;
+    cam.max_depth = 50;
+
+    cam.vfov = 20;
+    cam.lookfrom = point3(13, 2, 3);
+    cam.lookat = point3(0, 0, 0);
+    cam.vup = vec3(0, 1, 0);
+
+    cam.defocus_angle = 0;
+
+    cam.render(world, seed);
+}
+
 int main()
 {
-    switch (3)
+    switch (4)
     {
     case 1:
         bouncing_spheres();
@@ -155,6 +183,9 @@ int main()
         break;
     case 3:
         earth();
+        break;
+    case 4:
+        perlin_spheres();
         break;
     }
 }
