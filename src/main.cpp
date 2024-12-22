@@ -6,11 +6,12 @@
 #include "./class/material.hpp"
 #include "./class/camera.hpp"
 #include "class/bvh.hpp"
+#include "class/quad.hpp"
+
+unsigned int seed = 53;
 
 int bouncing_spheres()
 {
-    unsigned int seed = 53;
-    srand(seed);
     hittable_list world;
 
     auto checker = make_shared<checker_texture>(0.32, color(.1, .1, .1), color(.9, .9, .9));
@@ -91,8 +92,6 @@ int bouncing_spheres()
 
 void checkered_spheres()
 {
-    unsigned int seed = 53;
-    srand(seed);
     hittable_list world;
 
     auto checker = make_shared<checker_texture>(0.32, color(.2, .3, .1), color(.9, .9, .9));
@@ -119,9 +118,6 @@ void checkered_spheres()
 
 void earth()
 {
-    unsigned int seed = 53;
-    srand(seed);
-
     auto earth_texture = make_shared<image_texture>("earthmap.jpg");
     auto earth_surface = make_shared<lambertian>(earth_texture);
     auto globe = make_shared<sphere>(point3(0, 0, 0), 2, earth_surface);
@@ -145,9 +141,6 @@ void earth()
 
 void perlin_spheres()
 {
-    unsigned int seed = 53;
-    srand(seed);
-
     hittable_list world;
 
     auto pertext = make_shared<noise_texture>(seed, 4);
@@ -171,9 +164,45 @@ void perlin_spheres()
     cam.render(world, seed);
 }
 
+void quads()
+{
+    hittable_list world;
+
+    // Materials
+    auto left_red = make_shared<lambertian>(color(1.0, 0.2, 0.2));
+    auto back_green = make_shared<lambertian>(color(0.2, 1.0, 0.2));
+    auto right_blue = make_shared<lambertian>(color(0.2, 0.2, 1.0));
+    auto upper_orange = make_shared<lambertian>(color(1.0, 0.5, 0.0));
+    auto lower_teal = make_shared<lambertian>(color(0.2, 0.8, 0.8));
+
+    // Quads
+    world.add(make_shared<quad>(point3(-3, -2, 5), vec3(0, 0, -4), vec3(0, 4, 0), left_red));
+    world.add(make_shared<quad>(point3(-2, -2, 0), vec3(4, 0, 0), vec3(0, 4, 0), back_green));
+    world.add(make_shared<quad>(point3(3, -2, 1), vec3(0, 0, 4), vec3(0, 4, 0), right_blue));
+    world.add(make_shared<quad>(point3(-2, 3, 1), vec3(4, 0, 0), vec3(0, 0, 4), upper_orange));
+    world.add(make_shared<quad>(point3(-2, -3, 5), vec3(4, 0, 0), vec3(0, 0, -4), lower_teal));
+
+    camera cam;
+
+    cam.aspect_ratio = 1.0;
+    cam.image_width = 400;
+    cam.samples_per_pixel = 100;
+    cam.max_depth = 50;
+
+    cam.vfov = 80;
+    cam.lookfrom = point3(0, 0, 9);
+    cam.lookat = point3(0, 0, 0);
+    cam.vup = vec3(0, 1, 0);
+
+    cam.defocus_angle = 0;
+
+    cam.render(world, seed);
+}
+
 int main()
 {
-    switch (4)
+    srand(seed);
+    switch (5)
     {
     case 1:
         bouncing_spheres();
@@ -186,6 +215,9 @@ int main()
         break;
     case 4:
         perlin_spheres();
+        break;
+    case 5:
+        quads();
         break;
     }
 }
