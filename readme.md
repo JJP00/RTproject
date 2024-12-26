@@ -56,6 +56,12 @@ Tal vez, las imagenes se vean achatadas... no controlo markdown.
 | 17/12/24 - Imagen final con desenfoque de movimiento, donde 400x225, 100spp y 50 profundidad. |
 | 17/12/24 - Final image with motion blur, where 400x225, 100spp y 50 depth. |
 
+|<img src="resultados\final2.png" width=200 height=200>|
+|:---:|
+| 17/12/24 - Imagen final después del segundo libro, donde 400x400 250spp y 40 de profundidad del rayo. |
+| 17/12/24 - Final image after second book, where 400x400, 250spp y 40 ray depth. |
+
+
 # Referencias / references
 
 - [_Ray Tracing in One Weekend_](https://raytracing.github.io/books/RayTracingInOneWeekend.html)
