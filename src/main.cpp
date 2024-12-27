@@ -70,7 +70,7 @@ int bouncing_spheres()
 
     cam.aspect_ratio = 16.0 / 9.0;
     cam.image_width = 600;
-    cam.samples_per_pixel = 500;
+    cam.samples_per_pixel = 250;
     cam.max_depth = 40;
     cam.background = color(0.70, 0.80, 1.00);
 
@@ -440,7 +440,7 @@ int main()
         final_scene(800, 10000, 40);
         break;
     case 10:
-        final_scene(400, 250, 40);
+        final_scene(400, 1600, 40);
         break;
     }
 }

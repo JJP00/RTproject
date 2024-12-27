@@ -42,11 +42,16 @@ public:
 #pragma omp parallel for schedule(guided)
         for (int j = 0; j < image_height; j++)
         {
+#pragma omp critical
+            {
+                std::clog << "\rScanlines remaning: " << remaining_scanlines << ' ' << std::flush;
+            }
+
             unsigned int thread_seed = seed + omp_get_thread_num(); // Thread-local seed
             for (int i = 0; i < image_width; i++)
             {
                 color pixel_color(0, 0, 0);
-#pragma omp parallel for reduction(color_plus : pixel_color) schedule(guided)
+                // #pragma omp parallel for reduction(color_plus : pixel_color) schedule(guided)
                 for (int sample = 0; sample < samples_per_pixel; sample++)
                 {
                     ray r = get_ray(i, j, seed);
@@ -58,11 +63,6 @@ public:
             }
 
             remaining_scanlines--;
-
-#pragma omp critical
-            {
-                std::clog << "\rScanlines remaning: " << remaining_scanlines << ' ' << std::flush;
-            }
         }
 
         std::clog << "\rDone.                 \n";

@@ -12,6 +12,8 @@ public:
         normal = unit_vector(n);
         D = dot(normal, Q);
         w = n / dot(n, n);
+
+        set_bounding_box();
     }
 
     virtual void set_bounding_box()
