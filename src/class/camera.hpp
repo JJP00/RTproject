@@ -37,9 +37,9 @@ public:
         std::atomic<int> remaining_scanlines(image_height); // Atomic counter for scanlines
 
 #pragma omp declare reduction(color_plus:color : omp_out = omp_out + omp_in) initializer(omp_priv = color())
-#pragma omp_set_nested(1);
+        // #pragma omp_set_nested(1);
 
-#pragma omp parallel for schedule(guided)
+        // #pragma omp parallel for schedule(guided)
         for (int j = 0; j < image_height; j++)
         {
 #pragma omp critical
@@ -51,7 +51,7 @@ public:
             for (int i = 0; i < image_width; i++)
             {
                 color pixel_color(0, 0, 0);
-                // #pragma omp parallel for reduction(color_plus : pixel_color) schedule(guided)
+#pragma omp parallel for reduction(color_plus : pixel_color) schedule(guided)
                 for (int sample = 0; sample < samples_per_pixel; sample++)
                 {
                     ray r = get_ray(i, j, seed);

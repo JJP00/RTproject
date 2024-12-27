@@ -410,7 +410,7 @@ void final_scene(int image_width, int samples_per_pixel, int max_depth)
 
 int main()
 {
-    switch (10)
+    switch (9)
     {
     case 1:
         bouncing_spheres();
@@ -440,7 +440,7 @@ int main()
         final_scene(800, 10000, 40);
         break;
     case 10:
-        final_scene(400, 1600, 40);
+        final_scene(400, 250, 4);
         break;
     }
 }
