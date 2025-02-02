@@ -43,7 +43,7 @@ inline double random_double(unsigned int &seed)
 //     return min + (max - min) * random_double();
 // }
 
-inline double random_double(double min, double max, unsigned int &seed)
+inline double random_double(double min, double max, unsigned int seed)
 {
     return min + (max - min) * random_double(seed);
 }

@@ -5,6 +5,7 @@
 #include "material.hpp"
 #include <atomic>
 #include <omp.h>
+#include "pdf.hpp"
 class camera
 {
 public:
@@ -25,7 +26,7 @@ public:
     double focus_dist = 10;
 
     void
-    render(const hittable &world, unsigned int &seed)
+    render(const hittable &world, const hittable &lights, unsigned int &seed)
     {
         initialize();
 
@@ -36,10 +37,10 @@ public:
         std::vector<color> image(image_width * image_height);
         std::atomic<int> remaining_scanlines(image_height); // Atomic counter for scanlines
 
-#pragma omp declare reduction(color_plus:color : omp_out = omp_out + omp_in) initializer(omp_priv = color())
+        // #pragma omp declare reduction(color_plus:color : omp_out = omp_out + omp_in) initializer(omp_priv = color())
         // #pragma omp_set_nested(1);
 
-        // #pragma omp parallel for schedule(guided)
+#pragma omp parallel for schedule(guided)
         for (int j = 0; j < image_height; j++)
         {
 #pragma omp critical
@@ -51,11 +52,14 @@ public:
             for (int i = 0; i < image_width; i++)
             {
                 color pixel_color(0, 0, 0);
-#pragma omp parallel for reduction(color_plus : pixel_color) schedule(guided)
-                for (int sample = 0; sample < samples_per_pixel; sample++)
+                // #pragma omp parallel for reduction(color_plus : pixel_color) schedule(guided)
+                for (int s_j = 0; s_j < sqrt_spp; s_j++)
                 {
-                    ray r = get_ray(i, j, seed);
-                    pixel_color += ray_color(r, max_depth, world);
+                    for (int s_i = 0; s_i < sqrt_spp; s_i++)
+                    {
+                        ray r = get_ray(i, j, s_i, s_j, seed);
+                        pixel_color += ray_color(r, max_depth, world, lights);
+                    }
                 }
                 int index = j * image_width + i;
                 image[index] = pixel_color;
@@ -82,6 +86,8 @@ public:
 private:
     int image_height;
     double pixel_samples_scale;
+    int sqrt_spp;          // raiz quadrada del numero de rayos por pixel
+    double recip_sqrt_spp; // 1/sqrt_spp
     point3 camera_center;
     point3 pixel00_loc;
     vec3 pixel_delta_u;
@@ -96,7 +102,9 @@ private:
         image_height = int(image_width / aspect_ratio);
         image_height = (image_height < 1) ? 1 : image_height;
 
-        pixel_samples_scale = 1.0 / samples_per_pixel;
+        sqrt_spp = int(std::sqrt(samples_per_pixel));
+        pixel_samples_scale = 1.0 / (sqrt_spp * sqrt_spp);
+        recip_sqrt_spp = 1.0 / sqrt_spp;
 
         // camera
         camera_center = lookfrom;
@@ -131,9 +139,9 @@ private:
         defocus_disk_v = v * defocus_radius;
     }
 
-    ray get_ray(int i, int j, unsigned int &seed)
+    ray get_ray(int i, int j, int s_i, int s_j, unsigned int &seed)
     {
-        auto offset = sample_square(seed);
+        auto offset = sample_square_stratified(s_i, s_j, seed);
         auto pixel_sample = pixel00_loc + ((i + offset.x()) * pixel_delta_u) + ((j + offset.y()) * pixel_delta_v);
 
         auto ray_origin = (defocus_angle <= 0) ? camera_center : defocus_disk_sample(seed);
@@ -141,6 +149,14 @@ private:
         auto ray_time = random_double(seed);
 
         return ray(ray_origin, ray_direction, ray_time);
+    }
+
+    vec3 sample_square_stratified(int s_i, int s_j, unsigned int &seed) const
+    {
+        auto px = ((s_i + random_double(seed)) * recip_sqrt_spp) - 0.5;
+        auto py = ((s_j + random_double(seed)) * recip_sqrt_spp) - 0.5;
+
+        return vec3(px, py, 0);
     }
 
     point3 defocus_disk_sample(unsigned int &seed) const
@@ -155,7 +171,7 @@ private:
         return vec3(random_double(seed) - 0.5, random_double(seed) - 0.5, 0);
     }
 
-    color ray_color(const ray &r, int depth, const hittable &world) const
+    color ray_color(const ray &r, int depth, const hittable &world, const hittable &lights) const
     {
         if (depth <= 0)
             return color(0, 0, 0);
@@ -168,12 +184,23 @@ private:
         }
         ray scattered;
         color attenuation;
-        color color_from_emision = rec.mat->emitted(rec.u, rec.v, rec.p);
+        double pdf_value;
+        color color_from_emision = rec.mat->emitted(r, rec, rec.u, rec.v, rec.p);
 
-        if (!rec.mat->scatter(r, rec, attenuation, scattered, seed))
+        if (!rec.mat->scatter(r, rec, attenuation, scattered, pdf_value, seed))
             return color_from_emision;
 
-        color color_from_scatter = attenuation * ray_color(scattered, depth - 1, world);
+        auto p0 = make_shared<hittable_pdf>(lights, rec.p);
+        auto p1 = make_shared<cosine_pdf>(rec.normal);
+        mixture_pdf mixture_pdf(p0, p1);
+
+        scattered = ray(rec.p, mixture_pdf.generate(seed), r.time());
+        pdf_value = mixture_pdf.value(scattered.direction());
+
+        double scattering_pdf = rec.mat->scattering_pdf(r, rec, scattered);
+
+        color sample_color = ray_color(scattered, depth - 1, world, lights);
+        color color_from_scatter = (attenuation * scattering_pdf * sample_color) / pdf_value;
 
         return color_from_emision + color_from_scatter;
     }
